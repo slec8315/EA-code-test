@@ -1,12 +1,12 @@
 /*******************************************************
       Program Name 	:  Dice on a Yacht
-      Version      	:  1.2
+      Version      	:  2.0
       Programmer   	:  Steve Leclaire
 
 This file contains 2 primary functions as specified for
 scoring the results of a dice cast:
 
-int getScore(string category, int scores[])
+int getScore(string category, array <int, 5> scores)
 input:
     category: indicator for scoring result
     scores[]: dice results
@@ -14,7 +14,7 @@ output:
     total score based on category and dice results
 
 
-string getSuggestion(int scores[])
+string getSuggestion(array <int, 5> scores)
 input:
     scores[]: dice results
 output:
@@ -28,6 +28,7 @@ output:
 #include <cstring>                                  //Standard include for string
 #include <algorithm>                                //Standard include for sorting integer array
 #include <random>									//Standard include for RNG
+#include <array>                                    //Standard include for arrays
 
 using namespace std;
 
@@ -43,10 +44,10 @@ int GetRand(int range)                                  //Randomization algorith
         return  dist(RANDOM);
 };
 
-bool OfAKind(int amount, int scores[])              //Function to determine if the amount of required scores are in the array.
+bool OfAKind(int amount, array <int, 5> scores)     //Function to determine if the amount of required scores are in the array.
 {                                                   //This function was created to avoid repeating code in the "getScore"
     int totalOfAKind = 1;                           //function.  Currently, this function receives the amount of scores to look
-    for(int i = 1; i <= sizeof(scores); i++)        //for and the sorted score array.  If the total amount is found, we have x
+    for(int i = 1; i < scores.size(); i++)          //for and the sorted score array.  If the total amount is found, we have x
     {                                               //of a kind.  This was constructed with the expectation that additional
         if(scores[i] == scores[i - 1])              //x of a kind totals can be added later without changing this function.
         {
@@ -60,10 +61,10 @@ bool OfAKind(int amount, int scores[])              //Function to determine if t
     return false;
 };
 
-bool Straight(int length, int scores[])             //Function to determine if a straight exists within a sorted array. This
+bool Straight(int length, array <int, 5> scores)    //Function to determine if a straight exists within a sorted array. This
 {                                                   //function was created to avoid repeating code in the "getScore" function.
     int counter = 1;                                //Currently, this function receives the length of the straight to look for and
-    for(int i = 1; i <= sizeof(scores); i++)        //the sorted score array.  If the counter is equal to the length, We've found the
+    for(int i = 1; i < scores.size(); i++)          //the sorted score array.  If the counter is equal to the length, We've found the
     {                                               //required length of the straight.  This was constructed with the expectation
         if(scores[i] - 1 == scores[i - 1])          //that additional lengths of straights  can be added later without changing this
             counter++;                              //function.
@@ -75,10 +76,10 @@ bool Straight(int length, int scores[])             //Function to determine if a
     return false;
 };
 
-int scoreNumber(int value, int scores[])            //Scoring function for individual numbers.  This function was created
+int scoreNumber(int value, array <int, 5> scores)   //Scoring function for individual numbers.  This function was created
 {                                                   //to avoid repeating code in the "getScore" function.  Currently, this
     int total = 0;                                  //function receives the value of the die side being scored and the score
-    for(int i = 0; i <= sizeof(scores); i++)        //array, and will output the total of all values found.  Should the
+    for(int i = 0; i < scores.size(); i++)          //array, and will output the total of all values found.  Should the
     {                                               //amount of dice or numerical scoring categories increase in the future,
         if(scores[i] == value)                      //this number scoring function will be able to handle it.
             total+=value;
@@ -86,10 +87,10 @@ int scoreNumber(int value, int scores[])            //Scoring function for indiv
     return total;
 };
 
-int diceSum(int scores[])
+int diceSum(array <int, 5> scores)
 {                                                   //Total sum of all dice.  This function was created to avoid repeating code
     int total = 0;                                  //in the "getScore" function.  Currently, this function receives the score
-    for(int i = 0; i <= sizeof(scores); i++)        //array, and will output the total of all values within that array.  Should
+    for(int i = 0; i < scores.size(); i++)          //array, and will output the total of all values within that array.  Should
     {                                               //the amount of dice or amount of sides increase in the future, this
         total+=scores[i];                           //function will be able to handle it.
     }
@@ -100,10 +101,10 @@ int diceSum(int scores[])
 Functions created for test starts here
 *******************************************************/
 
-int getScore(string category, int scores[])
+int getScore(string category, array <int, 5> scores)
 {
-        const int scoresize = sizeof(scores) + 1;           //Create a new array of scores that can be rearranged so as to not
-        int sortedscores[scoresize] = {};                   //corrupt the order of the original array
+        const int scoresize = scores.size();                //Create a new array of scores that can be rearranged so as to not
+        array <int, 5> sortedscores = {};                   //corrupt the order of the original array
 
 		for(int i = 0; i < scoresize; i++)                  //For every array entry
             sortedscores[i] = scores[i];                    //assign to the new array
@@ -191,7 +192,7 @@ int getScore(string category, int scores[])
 
 };
 
-string getSuggestion(int scores[])
+string getSuggestion(array <int, 5> scores)
 {
     int highscore = 0, highcat = 0;                         //Current high score
     enum categories										    //All categories currently supported.  Required by test?
@@ -253,7 +254,7 @@ int main()
         const int dice = 5;                         //amount of dice to roll
         Dice DemBones[dice];                        //Dice to be rolled
         int sides = 8;                              //amount of sides per die
-        int scorearr[dice] = {0};                   //dice rolls
+        array <int, 5> scorearr = {0};              //dice rolls
         string category;                            //scoring category
         char keepRollin = 'y';                      //Loop terminator
 

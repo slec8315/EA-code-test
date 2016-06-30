@@ -17,3 +17,6 @@ Version history for "DiceScoringTest.cpp"
 	
 	version 1.2:  6/27/2016 8:53pm
 		Correction of categorizing bug for categories that have equal scores.
+
+	version 2.0:  6/29/2016 11:09pm
+		Replacement of array container with standard library container to fix compilation issue.
